@@ -12,14 +12,15 @@ import os
 # input and output files
 utils.make_dir("input/voice")
 utils.make_dir("output")
-
+config = json.load(open("config.json"))
 # initialize telegram bot
 isRunning = False
-tele_token = ""
+tele_token = config["tele_token"]
 tele_bot = telebot.TeleBot(tele_token, threaded=True)
 
+
 # connect to the OpenAI's ChatGPT
-chatbot = Chatbot(api_key="")
+chatbot = Chatbot(api_key=config["ChatGPT_token"])
 #chatbot.reset_chat()
 #chatbot.refresh_session()
 
@@ -38,6 +39,17 @@ def start_handler(message):
 def text_processing(message):
     response = chatbot.ask(message.text)
     tele_bot.send_message(message.chat.id, response)
+    # create a path to save the audio
+    output_audio_path = os.path.join('output', 'text_answer.mp3')
+
+    # convert the answer to speech
+    tts.convert(response, output_audio_path)
+
+    # send the voice response to the telegram
+    tele_bot.send_voice(message.chat.id, voice=open(output_audio_path, "rb"))
+
+    # remove input and output files
+    os.remove(output_audio_path)
 
 @tele_bot.message_handler(content_types=['voice'])
 def voice_processing(message):
