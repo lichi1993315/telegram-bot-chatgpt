@@ -1,4 +1,4 @@
-from revChatGPT.V1 import Chatbot
+from revChatGPT.V3 import Chatbot
 from issai.asr import ASR
 from issai.tts import TTS
 from issai import utils
@@ -34,11 +34,14 @@ def start_handler(message):
         tele_bot.send_message(message.chat.id, "Welcome to Voice ChatGPT!")
         isRunning = True
 
+@tele_bot.message_handler(content_types=['text'])
+def text_processing(message):
+    response = chatbot.ask(message.text)
+    tele_bot.send_message(message.chat.id, response)
+
 @tele_bot.message_handler(content_types=['voice'])
 def voice_processing(message):
     # reset the chat to preserve privacy
-    chatbot.reset_chat()
-    
     # process the voice message
     file_info = tele_bot.get_file(message.voice.file_id)
     file_data = tele_bot.download_file(file_info.file_path)
