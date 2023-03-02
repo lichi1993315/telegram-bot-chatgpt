@@ -1,8 +1,8 @@
-from revChatGPT.V1 import Chatbot
+from revChatGPT.V3 import Chatbot
+
 import json
 
-config = json.load(open("config.json"))
-chatbot = Chatbot(config=config)
+chatbot = Chatbot(api_key="")
 
 response = ""
 
@@ -11,7 +11,6 @@ while True:
     if prompt == 'q':
         break
 
-    for data in chatbot.ask(prompt):
-        response = data["message"]
+    response = chatbot.ask(prompt)
 
     print("ChatGPT:", response)

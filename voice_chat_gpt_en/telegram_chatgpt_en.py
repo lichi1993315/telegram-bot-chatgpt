@@ -15,12 +15,11 @@ utils.make_dir("output")
 
 # initialize telegram bot
 isRunning = False
-tele_token = "<YOUR TELEGRAM BOT TOKEN>"
+tele_token = ""
 tele_bot = telebot.TeleBot(tele_token, threaded=True)
 
 # connect to the OpenAI's ChatGPT
-config = json.load(open("config.json"))
-chatbot = Chatbot(config=config)
+chatbot = Chatbot(api_key="")
 #chatbot.reset_chat()
 #chatbot.refresh_session()
 
@@ -61,8 +60,7 @@ def voice_processing(message):
     print("User:", asr.message)
 
     # send the message to ChatGPT
-    for data in chatbot.ask(asr.message):
-        response = data["message"]
+    response = chatbot.ask(asr.message)
     print("ChatGPT:", response)
 
     # send the text response to telegram
