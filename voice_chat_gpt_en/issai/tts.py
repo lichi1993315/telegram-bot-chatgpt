@@ -2,6 +2,7 @@
 import pyttsx3
 import gtts
 import time
+from langdetect import detect
 
 class TTS:
     def __init__(self, model='google', gender=0):
@@ -30,7 +31,8 @@ class TTS:
 
     def convert(self, text_input, save_path):
         if self.model == 'google':
-            tts = self.tts(text_input, lang='en', tld='us')
+            lan = detect(text_input)
+            tts = self.tts(text_input, lang=lan, tld='us')
             tts.save(save_path)
         else:
             self.tts.save_to_file(text_input, save_path)
