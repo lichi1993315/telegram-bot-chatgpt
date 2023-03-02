@@ -6,6 +6,7 @@ import subprocess
 import telebot
 import json
 import os
+import time
 
 
 # create directories to save
@@ -40,7 +41,7 @@ def text_processing(message):
     response = chatbot.ask(message.text)
     tele_bot.send_message(message.chat.id, response)
     # create a path to save the audio
-    output_audio_path = os.path.join('output', 'text_answer.mp3')
+    output_audio_path = os.path.join('output', str(time.time()*1000000)+'text_answer.mp3')
 
     # convert the answer to speech
     tts.convert(response, output_audio_path)
@@ -49,7 +50,8 @@ def text_processing(message):
     tele_bot.send_voice(message.chat.id, voice=open(output_audio_path, "rb"))
 
     # remove input and output files
-    os.remove(output_audio_path)
+    if os.path.exists(output_audio_path):
+        os.remove(output_audio_path)
 
 @tele_bot.message_handler(content_types=['voice'])
 def voice_processing(message):
@@ -82,7 +84,7 @@ def voice_processing(message):
     tele_bot.send_message(message.chat.id, response)
 
     # create a path to save the audio
-    output_audio_path = os.path.join('output', 'answer.mp3')
+    output_audio_path = os.path.join('output', str(time.time()*1000000)+'voice_answer.mp3')
 
     # convert the answer to speech
     tts.convert(response, output_audio_path)
@@ -91,9 +93,12 @@ def voice_processing(message):
     tele_bot.send_voice(message.chat.id, voice=open(output_audio_path, "rb"))
 
     # remove input and output files
-    os.remove(raw_audio_path)
-    os.remove(input_audio_path)
-    os.remove(output_audio_path)
+    if os.path.exists(raw_audio_path):
+        os.remove(raw_audio_path)
+    if os.path.exists(input_audio_path):
+        os.remove(input_audio_path)
+    if os.path.exists(output_audio_path):
+        os.remove(output_audio_path)
 
 # run the telegram bot
 tele_bot.polling(none_stop=True)
