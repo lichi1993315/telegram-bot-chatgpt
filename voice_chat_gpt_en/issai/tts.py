@@ -30,6 +30,7 @@ class TTS:
             self.tts.setProperty('voice', self.voices[self.gender].id)
 
     def convert(self, text_input, save_path):
+        text_input = text_input.strip("`")
         if self.model == 'google':
             length = 5 if len(text_input) > 5 else len(text_input)
             lan = detect(text_input[0:length])
