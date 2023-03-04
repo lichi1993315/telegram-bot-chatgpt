@@ -31,8 +31,8 @@ class TTS:
 
     def convert(self, text_input, save_path):
         if self.model == 'google':
-            len = 5 if len(text_input) > 5 else len(text_input)
-            lan = detect(text_input[0:len])
+            length = 5 if len(text_input) > 5 else len(text_input)
+            lan = detect(text_input[0:length])
             if lan != 'zh-cn':
                 lan = 'en'
             tts = self.tts(text_input, lang=lan, tld='us')
